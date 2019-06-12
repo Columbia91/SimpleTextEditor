@@ -132,6 +132,14 @@ namespace SimpleTextEditor
 
                     SaveContent(content, path + "/" + fileName);
                 }
+                catch (ArgumentException exception)
+                {
+                    MessageBox.Show(exception.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (IOException exception)
+                {
+                    MessageBox.Show(exception.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
                 catch (Exception exception)
                 {
                     MessageBox.Show(exception.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -152,25 +160,10 @@ namespace SimpleTextEditor
         }
         private void SaveContent(string content, string filePath)
         {
-            try
+            using (FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate))
             {
-                using (FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate))
-                {
-                    byte[] array = System.Text.Encoding.Default.GetBytes(content);
-                    stream.Write(array, 0, array.Length);
-                }
-            }
-            catch (ArgumentException exception)
-            {
-                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (IOException exception)
-            {
-                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                byte[] array = System.Text.Encoding.Default.GetBytes(content);
+                stream.Write(array, 0, array.Length);
             }
         }
         #endregion
